@@ -22,9 +22,9 @@ new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
 
-;(function () {
+(function () {
   var rem = document.createElement('script')
   rem.src = './rem.js'
   document.body.appendChild(rem)

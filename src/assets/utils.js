@@ -1,4 +1,4 @@
-function strNumSize (tempNum) {
+function strNumSize(tempNum) {
   var stringNum = tempNum.toString()
   var index = stringNum.indexOf('.')
   var newNum = stringNum
@@ -8,7 +8,7 @@ function strNumSize (tempNum) {
   return newNum.length
 }
 
-function unitConvert (num) {
+function unitConvert(num) {
   var moneyUnits = ['', '万', '亿', '万亿']
   var dividend = 10000
   var curentNum = num

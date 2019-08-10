@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mu-appbar style="width: 100%;" color="transparent">
+    <mu-appbar style="width: 100%;" color="transparent" ref="header">
       <mu-button icon slot="left">
         <mu-icon value="arrow_back"></mu-icon>
       </mu-button>
@@ -18,7 +18,7 @@
 
     <div class="content">
       <img src="../assets/bg.jpg" alt class="bg-img" />
-      <div class="list-info">
+      <div class="list-info" ref="list">
         <div class="list-info-img">
           <img :src="playlist.coverImgUrl" alt width="100%" />
           <div class="playCount">
@@ -34,9 +34,12 @@
             <div class="adaver">
               <mu-chip color="transparent" text-color="#eeeeee">
                 <mu-avatar :size="24">
-                  <img v-if="typeof playlist.creator.avatarUrl !== 'undefined'" :src="playlist.creator.avatarUrl" />
+                  <img
+                    v-if="typeof playlist.creator.avatarUrl !== 'undefined'"
+                    :src="playlist.creator.avatarUrl"
+                  />
                 </mu-avatar>
-                {{playlist.creator.nickname}}
+                <span class="nickname">{{playlist.creator.nickname}}</span>
                 <mu-icon value="chevron_right"></mu-icon>
               </mu-chip>
             </div>
@@ -64,67 +67,97 @@
 </template>
 
 <script>
-// window.onscroll = function () {
-//   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+// window.onscroll = function() {
+//   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 
-//   var infoH = document.getElementsByClassName('list-info')[0].clientHeight
-//   console.log(scrollTop / infoH)
+//   var infoH = this.$refs.header.clientHeight;
+//   console.log(scrollTop / infoH);
 //   if (scrollTop > 0) {
-//     document.getElementsByClassName('mu-appbar')[0].style.backgroundColor =
-//       'rgba(169,96,124, ' + scrollTop / infoH + ')'
+//     document.getElementsByClassName("mu-appbar")[0].style.backgroundColor =
+//       "rgba(169,96,124, " + scrollTop / infoH + ")";
 //     // document.getElementsByClassName('mu-appbar')[0].style.opacity = scrollTop / info_H;
 //   } else {
 //   }
-// }
+// };
 export default {
-  name: 'ListDetail',
-  data () {
+  name: "ListDetail",
+  data() {
     return {
       playlist: {
         creator: {}
       },
       list_id: 0,
       title_status: 1
+    };
+  },
+  created() {
+    console.log(this.list_id);
+    this.list_id =
+      this.list_id === 0 ? this.$route.params.list_id : this.list_id;
+    console.log(this.list_id);
+    if (this.list_id === 0 || typeof this.list_id === "undefined") {
+      this.$router.push({
+        path: "/"
+      });
+    } else {
+      this.getListInfo(this);
     }
   },
-  created () {
-    console.log(this.list_id)
-    this.list_id =
-      this.list_id === 0 ? this.$route.params.list_id : this.list_id
-    console.log(this.list_id)
-    if (this.list_id === 0 || typeof this.list_id === 'undefined') {
-      this.$router.push({
-        path: '/'
-      })
-    } else {
-      this.getListInfo(this)
-    }
+
+  mounted() {
+    this.$nextTick(() => {
+      this.initDom();
+    });
+  },
+
+  beforeDestroy() {
+    document.removeEventListener("scroll", this.listenDomScroll);
   },
   methods: {
-    getListInfo (_this) {
+    initDom() {
+      document.addEventListener("scroll", this.listenDomScroll);
+    },
+
+    listenDomScroll() {
+      let infoH = this.$refs.list.offsetHeight;
+      console.log(this.$refs.list.offsetHeight);
+      let _this = this;
+
+      var scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      console.log(scrollTop);
+      if (scrollTop > 0) {
+        _this.$refs.header.$el.style.backgroundColor =
+          "rgba(169,96,124, " + scrollTop / infoH + ")";
+      } else {
+        _this.$refs.header.$el.style.backgroundColor = "rgba(169,96,124, 0)";
+      }
+    },
+
+    getListInfo(_this) {
       this.$axios
-        .get('/playlist/detail', {
+        .get("/playlist/detail", {
           params: {
             id: _this.list_id
           }
         })
         .then(res => {
-          const data = res.data
-          console.log(data)
+          const data = res.data;
+          console.log(data);
           if (data.code === 200) {
             // data.playlist.description = data.playlist.description.replace('\n', '<br />');
-            console.log(data.playlist.description)
-            var playCount = this.$utils.unitConvert(data.playlist.playCount)
-            data.playlist.playCount = playCount.num + playCount.unit
-            _this.playlist = data.playlist
+            console.log(data.playlist.description);
+            var playCount = this.$utils.unitConvert(data.playlist.playCount);
+            data.playlist.playCount = playCount.num + playCount.unit;
+            _this.playlist = data.playlist;
           }
         })
         .catch(err => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
@@ -205,6 +238,15 @@ export default {
 
         .mu-chip {
           margin-top: 8px;
+          white-space: normal;
+          .nickname {
+            white-space: normal;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            overflow: hidden;
+            flex: 1;
+          }
         }
       }
 
@@ -253,6 +295,7 @@ export default {
     width: 100%;
     height: calc(100vh - 56px);
     background-color: #ffffff;
+    border-radius: 20px 20px 0 0;
   }
 
   .bg-img {
