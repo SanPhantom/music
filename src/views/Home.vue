@@ -21,6 +21,8 @@
       <hello-world v-if="tab_active == 1"></hello-world>
       <page-my v-if="tab_active == 0"></page-my>
     </div>
+    
+    <music-play></music-play>
 
     <mu-drawer :open.sync="open" :docked="docked" :right="position === 'right'" width="280">
       <div class="login-info">
@@ -129,11 +131,13 @@
 <script>
 import HelloWorld from '../components/HelloWorld'
 import PageMy from '../components/PageMy.vue'
+import MusicPlay from '../components/MusicPlay.vue'
 export default {
   name: 'Home',
   components: {
     HelloWorld,
-    PageMy
+    PageMy,
+    MusicPlay
   },
   data () {
     return {
