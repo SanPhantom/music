@@ -49,7 +49,7 @@
             <img :src="item.picUrl" alt width="100%" />
             <div class="playCount">
               <mu-icon size="16" value="play_arrow" color="white"></mu-icon>
-              {{item.playCount}}
+              {{$utils.unitConvert(item.playCount, 1)}}
             </div>
           </div>
           <div class="song-list-itemDesc">
@@ -150,9 +150,6 @@ export default {
             console.log(_this.songList)
 
             result.forEach(item => {
-              var playCount = this.$utils.unitConvert(item.playCount)
-
-              item.playCount = playCount.num + playCount.unit
               _this.songList.push(item)
             })
 

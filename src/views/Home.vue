@@ -5,11 +5,11 @@
         <mu-icon value="menu"></mu-icon>
       </mu-button>
       <div slot="default">
-        <mu-tabs color="rgba(0,0,0,0)" full-width center>
-          <mu-tab to="/hello" replace>我的</mu-tab>
-          <mu-tab to="/find" replace>发现</mu-tab>
-          <mu-tab to="/" replace>云村</mu-tab>
-          <mu-tab to="/" replace>视频</mu-tab>
+        <mu-tabs color="rgba(0,0,0,0)" :value="tab_active" @change="tabsChange"  center>
+          <mu-tab replace>我的</mu-tab>
+          <mu-tab replace>发现</mu-tab>
+          <mu-tab replace>云村</mu-tab>
+          <mu-tab replace>视频</mu-tab>
         </mu-tabs>
       </div>
 
@@ -19,6 +19,7 @@
     </mu-appbar>
     <div class="content">
       <hello-world v-if="tab_active == 1"></hello-world>
+      <page-my v-if="tab_active == 0"></page-my>
     </div>
 
     <mu-drawer :open.sync="open" :docked="docked" :right="position === 'right'" width="280">
@@ -127,10 +128,12 @@
 
 <script>
 import HelloWorld from '../components/HelloWorld'
+import PageMy from '../components/PageMy.vue'
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    HelloWorld,
+    PageMy
   },
   data () {
     return {
@@ -140,6 +143,11 @@ export default {
       islogin: false,
       tab_active: 1
     }
+  },
+  methods: {
+      tabsChange(tab_index) {
+          this.tab_active = tab_index;
+      }
   }
 }
 </script>
@@ -154,6 +162,12 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
+  .mu-tab {
+      min-width: 0px;
+      &-active {
+          font-size: 16px;
+      }
+  }
 }
 
 .content {
