@@ -5,24 +5,24 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    current_music: {
+    currentMusic: {
         music_url: "",
         dt: 1
     },
-    music_list: [],
-    play_list: [],
-    current_index: 0,
+    musicList: [],
+    playList: [],
+    current_index: 0
   },
   mutations: {
-    setCurrentMusic: (state, current_music) => {
-        state.current_music = current_music;
+    setCurrentMusic: (state, currentMusic) => {
+        state.currentMusic = currentMusic;
     },
 
-    setMusicList: (state, music_list) => {
-        state.music_list = music_list;
+    setMusicList: (state, musicList) => {
+        state.musicList = musicList;
     },
-    setPlayList: (state, play_list) => {
-        state.play_list = play_list;
+    setPlayList: (state, playList) => {
+        state.playList = playList;
     }
   },
   actions: {

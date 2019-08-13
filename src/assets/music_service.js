@@ -1,7 +1,7 @@
-var getMusicStatus = function(_this, music_id, callback) {
+var getMusicStatus = function(_this, musicId, callback) {
     _this.$axios.get('/check/music', {
         params: {
-            id: music_id
+            id: musicId
         }
     }).then((res) => {
         const data = res.data;
@@ -9,21 +9,20 @@ var getMusicStatus = function(_this, music_id, callback) {
     })
 }
 
-
 module.exports = {
-    getMusicUrl: (_this, music_id, callback) => {
+    getMusicUrl: (_this, musicId, callback) => {
         console.log(this);
-        getMusicStatus(_this, music_id, function(evt) {
+        getMusicStatus(_this, musicId, function(evt) {
             if (evt.success) {
                 // this.music_br = music_br || 999000;
                 _this.$axios.get('/song/url', {
                     params: {
-                        id: music_id,
+                        id: musicId
                         // br: this.music_br
                     }
                 }).then((res) => {
                     const data = res.data;
-                    if (data.code == 200) {
+                    if (data.code === 200) {
                         callback(data);
                     }
                 })
@@ -31,9 +30,5 @@ module.exports = {
                 console.log(evt.message);
             }
         })
-
-
-    },
-
-
+    }
 }

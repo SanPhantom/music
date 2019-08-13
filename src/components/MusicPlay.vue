@@ -1,11 +1,11 @@
 <template>
     <mu-paper class="demo-paper" circle :z-depth="1">
         <div class="img-box" :class="playing ? 'rotate' : ''">
-            <img v-if="current_music.id" :src="current_music.al.picUrl" alt="" width="100%">
+            <img v-if="currentMusic.id" :src="current_music.al.picUrl" alt="" width="100%">
         </div>
         <mu-circular-progress class="demo-circular-progress" mode="determinate" :value="percent" color="secondary"
             :stroke-width="2" :size="64"></mu-circular-progress>
-        <audio :src="current_music.music_url" ref="audio" autoplay="autoplay" style="display: none;"></audio>
+        <audio :src="currentMusic.music_url" ref="audio" autoplay="autoplay" style="display: none;"></audio>
     </mu-paper>
 </template>
 
@@ -17,7 +17,7 @@
     export default {
         name: 'MusicPlay',
         computed: {
-            ...mapState(['current_music'])
+            ...mapState(['currentMusic'])
 
         },
         data() {
@@ -43,7 +43,7 @@
         methods: {
             ...mapMutations(['setMusicList']),
             setPercent(currentTime) {
-                this.percent = Math.min(1, currentTime * 1000 / this.current_music.dt) * 100;
+                this.percent = Math.min(1, currentTime * 1000 / this.currentMusic.dt) * 100;
             }
         },
         watch: {
