@@ -7,6 +7,7 @@ import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import axios from 'axios'
 import utils from './assets/utils'
+import musicService from './assets/music_service.js'
 
 Vue.config.productionTip = false
 
@@ -17,6 +18,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 Vue.prototype.$axios = axios
 Vue.prototype.$utils = utils
+Vue.prototype.$music = musicService
 
 new Vue({
   router,

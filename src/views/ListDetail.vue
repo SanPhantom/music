@@ -73,7 +73,7 @@
                 </div>
                 <div class="songs" ref="songs">
                     <mu-list textline="two-line">
-                        <mu-list-item avatar button :ripple="false" v-for="(track, index) in playlist.tracks" :key="track.id">
+                        <mu-list-item avatar button :ripple="false" @click="play_music(track, index)" v-for="(track, index) in playlist.tracks" :key="track.id">
                             <mu-list-item-action class="number">
                                 {{index + 1}}
                             </mu-list-item-action>
@@ -108,18 +108,6 @@
 </template>
 
 <script>
-    // window.onscroll = function() {
-    //   var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-
-    //   var infoH = this.$refs.header.clientHeight;
-    //   console.log(scrollTop / infoH);
-    //   if (scrollTop > 0) {
-    //     document.getElementsByClassName("mu-appbar")[0].style.backgroundColor =
-    //       "rgba(169,96,124, " + scrollTop / infoH + ")";
-    //     // document.getElementsByClassName('mu-appbar')[0].style.opacity = scrollTop / info_H;
-    //   } else {
-    //   }
-    // };
     export default {
         name: "ListDetail",
         data() {
@@ -133,10 +121,9 @@
             };
         },
         created() {
-            console.log(this.list_id);
             this.list_id =
                 this.list_id === 0 ? this.$route.params.list_id : this.list_id;
-            console.log(this.list_id);
+
             if (this.list_id === 0 || typeof this.list_id === "undefined") {
                 this.$router.push({
                     path: "/"
@@ -199,6 +186,19 @@
                     .catch(err => {
                         console.log(err);
                     });
+            },
+
+            play_music(track, index) {
+                console.log(this);
+                let _this = this;
+                this.$music.getMusicUrl(this, track.id, function(res) {
+                    console.log(res);
+                    track.music_url = res.data[0].url;
+                    console.log(_this);
+                    _this.$store.commit('setCurrentMusic', track);
+                    _this.$store.commit('setMusicList', _this.playlist.tracks);
+                    console.log(_this.$store.state.current_music);
+                })
             }
         }
     };
