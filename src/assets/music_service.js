@@ -4,8 +4,13 @@ var getMusicStatus = function(_this, musicId, callback) {
             id: musicId
         }
     }).then((res) => {
+        console.log(res);
         const data = res.data;
         callback(data)
+    }).catch((err) => {
+        console.log(err.response.data.message);
+        _this.$toast.message(err.response.data.message);
+        console.log(_this.$store.state.playList);
     })
 }
 
@@ -22,12 +27,17 @@ module.exports = {
                     }
                 }).then((res) => {
                     const data = res.data;
-                    if (data.code === 200) {
+                    console.log(data.data[0].url);
+                    console.log(typeof data.data.url!== "undefined");
+                    if (data.code === 200 && data.data[0].url !== null) {
+                        console.log("进来了");
                         callback(data);
+                    } else {
+                        _this.$toast.message("亲爱的，暂无版权");
                     }
                 })
             } else {
-                console.log(evt.message);
+
             }
         })
     }

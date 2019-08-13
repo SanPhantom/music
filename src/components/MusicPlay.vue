@@ -1,7 +1,7 @@
 <template>
     <mu-paper class="demo-paper" circle :z-depth="1">
         <div class="img-box" :class="playing ? 'rotate' : ''">
-            <img v-if="currentMusic.id" :src="current_music.al.picUrl" alt="" width="100%">
+            <img v-if="currentMusic.id" :src="currentMusic.al.picUrl" alt="" width="100%">
         </div>
         <mu-circular-progress class="demo-circular-progress" mode="determinate" :value="percent" color="secondary"
             :stroke-width="2" :size="64"></mu-circular-progress>
@@ -17,7 +17,7 @@
     export default {
         name: 'MusicPlay',
         computed: {
-            ...mapState(['currentMusic'])
+            ...mapState(['currentMusic', 'playList', 'current_index'])
 
         },
         data() {
@@ -30,13 +30,26 @@
             let _this = this;
             this.$nextTick(() => {
                 let audio = this.$refs.audio;
+                audio.addEventListener('canplay', function() {
+                    
+                    this.play();
+                    _this.playing = true;
+                })
                 audio.addEventListener("timeupdate", function() {
                     _this.setPercent(this.currentTime);
-                    _this.playing = true;
                 });
                 audio.addEventListener('ended', function() {
                     _this.percent = 0;
                     _this.playing = false;
+                    
+                    if (_this.current_index === _this.playList.length - 1) {
+                        _this.current_index = -1;
+                    }
+                    _this.$music.getMusicUrl(_this, _this.playList[_this.current_index + 1].id, function(res) {
+                        _this.playList[_this.current_index + 1].music_url = res.data[0].url;
+                        _this.$store.commit('setCurrentMusic', _this.playList[_this.current_index + 1]);
+                        _this.$store.commit('setCurrentIndex', _this.current_index + 1);
+                    })
                 });
             })
         },

@@ -12,6 +12,7 @@
     "core-js": "^2.6.5",
     "hls.js": "^0.12.4",
     "muse-ui": "^3.0.2",
+    "muse-ui-toast": "^0.3.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
@@ -41,10 +42,13 @@
       "@vue/standard"
     ],
     "rules": {
-      "space-before-function-paren": [0, "always"],
+      "space-before-function-paren": [
+        0,
+        "always"
+      ],
       "indent": 0,
       "semi": 0,
-	  "quotes": 0
+      "quotes": 0
     },
     "parserOptions": {
       "parser": "babel-eslint"
@@ -53,7 +57,10 @@
   "postcss": {
     "plugins": {
       "autoprefixer": {
-        "browsers": ["Android >= 4.0", "iOS >= 7"]
+        "browsers": [
+          "Android >= 4.0",
+          "iOS >= 7"
+        ]
       }
     }
   },

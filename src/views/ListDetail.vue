@@ -77,7 +77,7 @@
                             <mu-list-item-action class="number">
                                 {{index + 1}}
                             </mu-list-item-action>
-                            <mu-list-item-content>
+                            <mu-list-item-content :class="currentMusic.id === track.id ? 'active' : ''">
                                 <mu-list-item-title>{{track.name}}<span v-if="track.alia.length">({{track.alia[0]}})</span></mu-list-item-title>
                                 <mu-list-item-sub-title>
                                     <div class="singers">
@@ -108,8 +108,12 @@
 </template>
 
 <script>
+    import {mapState} from 'vuex'
     export default {
         name: "ListDetail",
+        computed: {
+            ...mapState(['current_index', 'playList', 'currentMusic'])
+        },
         data() {
             return {
                 playlist: {
@@ -196,8 +200,8 @@
                     track.music_url = res.data[0].url;
                     console.log(_this);
                     _this.$store.commit('setCurrentMusic', track);
-                    _this.$store.commit('setMusicList', _this.playlist.tracks);
-                    console.log(_this.$store.state.current_music);
+                    _this.$store.commit('setPlayList', _this.playlist.tracks);
+                    _this.$store.commit('setCurrentIndex', index);
                 })
             }
         }
@@ -391,6 +395,16 @@
 
                 .mu-list {
                     .mu-item {
+                        &-content {
+                            &.active {
+                                .mu-item-title {
+                                    color: rgba(243,33,33,.87)
+                                }
+                                .mu-item-sub-title {
+                                    color: rgba(243,33,33,.54)
+                                }
+                            }
+                        }
                         &-title {
                             font-size: 16px;
                         }
