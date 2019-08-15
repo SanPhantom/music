@@ -73,7 +73,8 @@
                 </div>
                 <div class="songs" ref="songs">
                     <mu-list textline="two-line">
-                        <mu-list-item avatar button :ripple="false" @click="play_music(track, index)" v-for="(track, index) in playlist.tracks" :key="track.id">
+                        <mu-list-item avatar button :ripple="false" @click="play_music(track, index)" v-for="(track, index) in playlist.tracks"
+                            :key="track.id">
                             <mu-list-item-action class="number">
                                 {{index + 1}}
                             </mu-list-item-action>
@@ -108,7 +109,9 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+    import {
+        mapState
+    } from 'vuex'
     export default {
         name: "ListDetail",
         computed: {
@@ -154,7 +157,7 @@
             listenDomScroll() {
                 if (this.$refs.list) {
                     let infoH = this.$refs.list.offsetHeight;
-                    // let funcsH = this.$refs.funcs.offsetHeight;
+                    let funcsH = this.$refs.funcs.offsetHeight;
                     let _this = this;
                     var scrollTop =
                         document.documentElement.scrollTop || document.body.scrollTop;
@@ -165,7 +168,7 @@
                         _this.$refs.header.$el.style.backgroundColor = "rgba(169,96,124, 0)";
                     }
 
-                    if (scrollTop > 0) {
+                    if (scrollTop >= infoH + funcsH) {
                         _this.$refs.songs.style.overflow = "auto";
                     } else {
                         _this.$refs.songs.style.overflow = "hidden";
@@ -208,8 +211,12 @@
     };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .mu-appbar {
+        position: fixed;
+        left: 0;
+        top: 0;
+
         &-title {
             padding-left: 0;
             font-size: 16px;
@@ -232,6 +239,8 @@
     }
 
     .content {
+        padding-top: 56px;
+
         .list-info {
             padding: 20px;
             display: flex;
@@ -398,16 +407,19 @@
                         &-content {
                             &.active {
                                 .mu-item-title {
-                                    color: rgba(243,33,33,.87)
+                                    color: rgba(243, 33, 33, .87)
                                 }
+
                                 .mu-item-sub-title {
-                                    color: rgba(243,33,33,.54)
+                                    color: rgba(243, 33, 33, .54)
                                 }
                             }
                         }
+
                         &-title {
                             font-size: 16px;
                         }
+
                         &-sub-title {
                             display: flex;
                             justify-content: flex-start;
@@ -418,14 +430,17 @@
                                 padding: 0 2px;
                             }
                         }
+
                         &-action {
                             min-width: 0;
                             margin-right: 0;
                             margin-left: 10px;
+
                             .mu-button {
                                 padding: 0px;
                                 width: auto;
                             }
+
                             &.number {
                                 font-size: 14px;
                                 margin-right: 16px;

@@ -28,7 +28,7 @@ module.exports = {
                 }).then((res) => {
                     const data = res.data;
                     console.log(data.data[0].url);
-                    console.log(typeof data.data.url!== "undefined");
+                    console.log(typeof data.data.url !== "undefined");
                     if (data.code === 200 && data.data[0].url !== null) {
                         console.log("进来了");
                         callback(data);

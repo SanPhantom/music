@@ -8,12 +8,13 @@ export default new Vuex.Store({
     currentMusic: {
         id: -1,
         music_url: "",
-        dt: 1,
+        dt: 0,
         al: {}
     },
     musicList: [],
     playList: [],
-    current_index: -1
+    current_index: -1,
+    playType: 0
   },
   mutations: {
     setCurrentMusic: (state, currentMusic) => {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     },
     setCurrentIndex: (state, index) => {
         state.current_index = index;
+    },
+    setPlayType: (state, index) => {
+        state.playType = index;
     }
   },
   actions: {

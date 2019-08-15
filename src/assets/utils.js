@@ -33,6 +33,18 @@ function unitConvert(num, fixedNum) {
   return m.num + m.unit;
 }
 
+function fas(num) {
+    return num<10 ? "0"+num : num;
+}
+
+function formatTime(time) {
+    // time = parseInt(time / 1000);
+    let sec = parseInt(time % 60);
+    let min = parseInt(time / 60);
+    return fas(min) + ":" + fas(sec);
+}
+
 export default {
-  unitConvert
+  unitConvert,
+  formatTime
 }

@@ -15,8 +15,8 @@ Vue.config.productionTip = false
 Vue.use(MuseUI)
 Vue.use(MuseUIToast)
 
-// axios.defaults.baseURL = 'http://www.sanphantom.cn:3000'
-axios.defaults.baseURL = 'http://localhost:3000'
+axios.defaults.baseURL = 'http://www.sanphantom.cn:3000'
+// axios.defaults.baseURL = 'http://localhost:3000'
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
 Vue.prototype.$axios = axios

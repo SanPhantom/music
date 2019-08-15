@@ -1,29 +1,41 @@
 <template>
-    <mu-paper class="demo-paper" circle :z-depth="1">
-        <div class="img-box" :class="playing ? 'rotate' : ''">
-            <img v-if="currentMusic.id" :src="currentMusic.al.picUrl" alt="" width="100%">
-        </div>
-        <mu-circular-progress class="demo-circular-progress" mode="determinate" :value="percent" color="secondary"
-            :stroke-width="2" :size="64"></mu-circular-progress>
-        <audio :src="currentMusic.music_url" ref="audio" autoplay="autoplay" style="display: none;"></audio>
-    </mu-paper>
+    <mu-container>
+        <mu-paper class="demo-paper" circle :z-depth="1" @click="openFullScreenDialog">
+            <div class="img-box" :class="playing ? 'rotate' : ''">
+                <img v-if="currentMusic.id" :src="currentMusic.al.picUrl" alt="" width="100%">
+            </div>
+            <mu-circular-progress class="demo-circular-progress" mode="determinate" :value="percent" color="secondary"
+                :stroke-width="2" :size="64"></mu-circular-progress>
+            <audio :src="currentMusic.music_url" ref="audio" autoplay="autoplay" style="display: none;"></audio>
+        </mu-paper>
+        <mu-dialog width="375" fullscreen transition="slide-bottom" :open.sync="openFullScreen">
+            <music @updateCurrentTime="updateCurrentTime" @closeDialog="closeFullScreenDialog" @isplay="playControl"
+                :currentTime="currentTime" :playing="playing">
+            </music>
+        </mu-dialog>
+    </mu-container>
 </template>
 
 <script>
+    import Music from '../views/Music.vue';
     import {
         mapState,
         mapMutations
     } from 'vuex'
     export default {
         name: 'MusicPlay',
+        components: {
+            Music
+        },
         computed: {
-            ...mapState(['currentMusic', 'playList', 'current_index'])
-
+            ...mapState(['currentMusic', 'playList', 'current_index', 'playType'])
         },
         data() {
             return {
+                openFullScreen: false,
                 percent: 0,
-                playing: false
+                playing: false,
+                currentTime: 0
             }
         },
         mounted() {
@@ -31,25 +43,48 @@
             this.$nextTick(() => {
                 let audio = this.$refs.audio;
                 audio.addEventListener('canplay', function() {
-                    
                     this.play();
+                    _this.playing = true;
+                })
+                audio.addEventListener('pause', function() {
+                    // this.pause();
+                    _this.playing = false;
+                })
+                audio.addEventListener('play', function() {
+                    // this.pause();
                     _this.playing = true;
                 })
                 audio.addEventListener("timeupdate", function() {
                     _this.setPercent(this.currentTime);
+                    _this.currentTime = this.currentTime;
                 });
                 audio.addEventListener('ended', function() {
                     _this.percent = 0;
                     _this.playing = false;
-                    
-                    if (_this.current_index === _this.playList.length - 1) {
-                        _this.current_index = -1;
+
+                    let currentIndex = _this.current_index;
+
+                    if (_this.playType === 0) {
+                        // 随机播放
+                        currentIndex = Math.floor(Math.random() * (_this.playList.length - 1));
+                    } else if (_this.playType === 1) {
+                        // 列表循环
+                    } else if (_this.playType === 2) {
+                        // 单曲循环
+                        this.play();
+                        return;
+                        // currentIndex = currentIndex - 1;
                     }
-                    _this.$music.getMusicUrl(_this, _this.playList[_this.current_index + 1].id, function(res) {
-                        _this.playList[_this.current_index + 1].music_url = res.data[0].url;
-                        _this.$store.commit('setCurrentMusic', _this.playList[_this.current_index + 1]);
-                        _this.$store.commit('setCurrentIndex', _this.current_index + 1);
-                    })
+
+                    if (currentIndex === _this.playList.length - 1) {
+                        currentIndex = -1;
+                    }
+                    _this.$music.getMusicUrl(_this, _this.playList[currentIndex + 1].id,
+                        function(res) {
+                            _this.playList[currentIndex + 1].music_url = res.data[0].url;
+                            _this.$store.commit('setCurrentMusic', _this.playList[currentIndex + 1]);
+                            _this.$store.commit('setCurrentIndex', currentIndex + 1);
+                        })
                 });
             })
         },
@@ -57,6 +92,24 @@
             ...mapMutations(['setMusicList']),
             setPercent(currentTime) {
                 this.percent = Math.min(1, currentTime * 1000 / this.currentMusic.dt) * 100;
+            },
+            openFullScreenDialog() {
+                this.openFullScreen = true;
+            },
+            closeFullScreenDialog() {
+                console.log("我接受到了")
+                this.openFullScreen = false;
+            },
+            playControl() {
+                this.playing = !this.playing;
+                if (this.playing) {
+                    this.$refs.audio.play();
+                } else {
+                    this.$refs.audio.pause();
+                }
+            },
+            updateCurrentTime(currentTime) {
+                this.$refs.audio.currentTime = currentTime;
             }
         },
         watch: {
@@ -91,11 +144,11 @@
 
             &.rotate {
                 animation-name: rotate;
-                animation-duration: 5s;
+                animation-duration: 25s;
                 animation-timing-function: linear;
                 animation-iteration-count: infinite;
-                animation: rotate 2s linear inherit;
-                -webkit-animation: rotate 2s linear inherit;
+                animation: rotate 25s linear inherit;
+                -webkit-animation: rotate 25s linear inherit;
             }
 
             img {
