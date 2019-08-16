@@ -5,7 +5,7 @@
                 <mu-icon value="arrow_back"></mu-icon>
             </mu-button>
             <span v-if="title_status === 0">歌单</span>
-            <span v-else>{{playlist.name}}</span>
+            <span v-else>{{songlist.name}}</span>
 
             <mu-button icon slot="right">
                 <mu-icon value="search"></mu-icon>
@@ -20,29 +20,29 @@
             <img src="../assets/bg.jpg" alt class="bg-img" />
             <div class="list-info" ref="list">
                 <div class="list-info-img">
-                    <img :src="playlist.coverImgUrl" alt width="100%" />
+                    <img :src="songlist.coverImgUrl" alt width="100%" />
                     <div class="playCount">
                         <mu-icon size="16" value="play_arrow" color="white"></mu-icon>
-                        {{$utils.unitConvert(playlist.playCount, 1)}}
+                        {{$utils.unitConvert(songlist.playCount, 1)}}
                     </div>
                 </div>
                 <div class="list-info-desc">
                     <div class="top">
                         <div class="title">
-                            <p>{{playlist.name}}</p>
+                            <p>{{songlist.name}}</p>
                         </div>
                         <div class="adaver">
                             <mu-chip color="transparent" text-color="#eeeeee">
                                 <mu-avatar :size="24">
-                                    <img v-if="typeof playlist.creator.avatarUrl !== 'undefined'" :src="playlist.creator.avatarUrl" />
+                                    <img v-if="typeof songlist.creator.avatarUrl !== 'undefined'" :src="songlist.creator.avatarUrl" />
                                 </mu-avatar>
-                                <span class="nickname">{{playlist.creator.nickname}}</span>
+                                <span class="nickname">{{songlist.creator.nickname}}</span>
                                 <mu-icon value="chevron_right"></mu-icon>
                             </mu-chip>
                         </div>
                     </div>
                     <div class="bottom">
-                        <pre>{{playlist.description}}</pre>
+                        <pre>{{songlist.description}}</pre>
 
                         <mu-icon value="chevron_right"></mu-icon>
                     </div>
@@ -51,8 +51,8 @@
 
             <div class="funcs" ref="funcs">
                 <mu-bottom-nav>
-                    <mu-bottom-nav-item :title="playlist.commentCount+''" icon="chat"></mu-bottom-nav-item>
-                    <mu-bottom-nav-item :title="playlist.shareCount+''" icon="share"></mu-bottom-nav-item>
+                    <mu-bottom-nav-item :title="songlist.commentCount+''" icon="chat"></mu-bottom-nav-item>
+                    <mu-bottom-nav-item :title="songlist.shareCount+''" icon="share"></mu-bottom-nav-item>
                     <mu-bottom-nav-item title="下载" icon="cloud_download"></mu-bottom-nav-item>
                     <mu-bottom-nav-item title="多选" icon="check_box"></mu-bottom-nav-item>
                 </mu-bottom-nav>
@@ -62,18 +62,18 @@
                 <div class="controls">
                     <div class="play_all">
                         <mu-icon value="play_circle_outline" size="22"></mu-icon>
-                        播放全部<span>(共{{playlist.trackCount}}首)</span>
+                        播放全部<span>(共{{songlist.trackCount}}首)</span>
                     </div>
                     <div class="collect">
                         <mu-button round color="#f32121">
                             <mu-icon value="add" size="18"></mu-icon>
-                            收藏({{$utils.unitConvert(playlist.subscribedCount, 0)}})
+                            收藏({{$utils.unitConvert(songlist.subscribedCount, 0)}})
                         </mu-button>
                     </div>
                 </div>
                 <div class="songs" ref="songs">
                     <mu-list textline="two-line">
-                        <mu-list-item avatar button :ripple="false" @click="play_music(track, index)" v-for="(track, index) in playlist.tracks"
+                        <mu-list-item avatar button :ripple="false" @click="play_music(track, index)" v-for="(track, index) in songlist.tracks"
                             :key="track.id">
                             <mu-list-item-action class="number">
                                 {{index + 1}}
@@ -119,7 +119,7 @@
         },
         data() {
             return {
-                playlist: {
+                songlist: {
                     creator: {},
                     tracks: []
                 },
@@ -187,7 +187,7 @@
                         const data = res.data;
                         console.log(data);
                         if (data.code === 200) {
-                            _this.playlist = data.playlist;
+                            _this.songlist = data.playlist;
                         }
                     })
                     .catch(err => {
@@ -203,8 +203,9 @@
                     track.music_url = res.data[0].url;
                     console.log(_this);
                     _this.$store.commit('setCurrentMusic', track);
-                    _this.$store.commit('setPlayList', _this.playlist.tracks);
-                    _this.$store.commit('setCurrentIndex', index);
+                    // _this.$store.commit('setCurrentIndex', index);
+                    _this.$store.commit('setMusicList', _this.songlist.tracks);
+                    console.log(_this.$store.state.musicList);
                 })
             }
         }

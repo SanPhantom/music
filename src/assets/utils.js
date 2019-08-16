@@ -37,6 +37,16 @@ function fas(num) {
     return num<10 ? "0"+num : num;
 }
 
+function shuffle(arr) {
+    let size = arr.length;
+    let random;
+    while (0 != size){
+        random = (Math.random() * size--) >>> 0;
+        [arr[size], arr[random]] = [arr[random], arr[size]];
+    }
+    return arr;
+}
+
 function formatTime(time) {
     // time = parseInt(time / 1000);
     let sec = parseInt(time % 60);
@@ -46,5 +56,6 @@ function formatTime(time) {
 
 export default {
   unitConvert,
-  formatTime
+  formatTime,
+  shuffle
 }

@@ -9,8 +9,8 @@
             <audio :src="currentMusic.music_url" ref="audio" autoplay="autoplay" style="display: none;"></audio>
         </mu-paper>
         <mu-dialog width="375" fullscreen transition="slide-bottom" :open.sync="openFullScreen">
-            <music @updateCurrentTime="updateCurrentTime" @closeDialog="closeFullScreenDialog" @isplay="playControl"
-                :currentTime="currentTime" :playing="playing">
+            <music @prev="prevMusic" @next="nextMusic" @updateCurrentTime="updateCurrentTime" @closeDialog="closeFullScreenDialog"
+                @isplay="playControl" :currentTime="currentTime" :playing="playing">
             </music>
         </mu-dialog>
     </mu-container>
@@ -62,29 +62,13 @@
                     _this.percent = 0;
                     _this.playing = false;
 
-                    let currentIndex = _this.current_index;
-
-                    if (_this.playType === 0) {
-                        // 随机播放
-                        currentIndex = Math.floor(Math.random() * (_this.playList.length - 1));
-                    } else if (_this.playType === 1) {
-                        // 列表循环
-                    } else if (_this.playType === 2) {
+                    if (_this.playType === 2) {
                         // 单曲循环
                         this.play();
                         return;
                         // currentIndex = currentIndex - 1;
                     }
-
-                    if (currentIndex === _this.playList.length - 1) {
-                        currentIndex = -1;
-                    }
-                    _this.$music.getMusicUrl(_this, _this.playList[currentIndex + 1].id,
-                        function(res) {
-                            _this.playList[currentIndex + 1].music_url = res.data[0].url;
-                            _this.$store.commit('setCurrentMusic', _this.playList[currentIndex + 1]);
-                            _this.$store.commit('setCurrentIndex', currentIndex + 1);
-                        })
+                    this.nextMusic();
                 });
             })
         },
@@ -97,7 +81,6 @@
                 this.openFullScreen = true;
             },
             closeFullScreenDialog() {
-                console.log("我接受到了")
                 this.openFullScreen = false;
             },
             playControl() {
@@ -110,12 +93,39 @@
             },
             updateCurrentTime(currentTime) {
                 this.$refs.audio.currentTime = currentTime;
+            },
+            prevMusic() {
+                let _this = this;
+                let currentIndex = _this.current_index;
+
+                if (currentIndex === 0) {
+                    currentIndex = _this.playList.length;
+                }
+                _this.$music.getMusicUrl(_this, _this.playList[currentIndex - 1].id,
+                    function(res) {
+                        _this.playList[currentIndex - 1].music_url = res.data[0].url;
+                        _this.$store.commit('setCurrentMusic', _this.playList[currentIndex - 1]);
+                        _this.$store.commit('setCurrentIndex', currentIndex - 1);
+                    })
+            },
+            nextMusic() {
+                let _this = this;
+                let currentIndex = _this.current_index;
+
+                if (currentIndex === _this.playList.length - 1) {
+                    currentIndex = -1;
+                }
+                _this.$music.getMusicUrl(_this, _this.playList[currentIndex + 1].id,
+                    function(res) {
+                        _this.playList[currentIndex + 1].music_url = res.data[0].url;
+                        _this.$store.commit('setCurrentMusic', _this.playList[currentIndex + 1]);
+                        _this.$store.commit('setCurrentIndex', currentIndex + 1);
+                    })
             }
         },
         watch: {
             current_music(newValue, oldValue) {
                 const _this = this;
-                console.log(newValue);
                 setInterval(function() {
                     _this.setPercent();
                 }, 500);

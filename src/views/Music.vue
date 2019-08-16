@@ -29,10 +29,10 @@
                 </div>
                 <div class="btns">
                     <mu-icon @click="chooseType" :value="type[playType]" color="#ffffff" size="32"></mu-icon>
-                    <mu-icon value="skip_previous" color="#ffffff" size="32"></mu-icon>
+                    <mu-icon @click="prevMusic" value="skip_previous" color="#ffffff" size="32"></mu-icon>
                     <mu-icon @click="isPlay" :value="playing ? 'pause_circle_outline' : 'play_circle_outline'" color="#ffffff"
                         size="52"></mu-icon>
-                    <mu-icon value="skip_next" color="#ffffff" size="32"></mu-icon>
+                    <mu-icon @click="nextMusic" value="skip_next" color="#ffffff" size="32"></mu-icon>
                     <mu-icon value="queue_music" color="#ffffff" size="32"></mu-icon>
                 </div>
             </div>
@@ -80,13 +80,20 @@
                 this.$emit('isplay');
             },
             chooseType() {
-                // console.log(this.type_index);
-                let x = this.playType === this.type.length - 1 ? 0 : this.playType + 1;
+                console.log(parseInt(this.playType) === this.type.length - 1);
+                let x = parseInt(this.playType) === this.type.length - 1 ? 0 : this.playType + 1;
+                console.log("playType ===> " + x);
                 this.$store.commit('setPlayType', x);
             },
             musicRate(value) {
                 let currentTime = (this.currentMusic.dt / 1000) * (value / 100);
                 this.$emit('updateCurrentTime', currentTime);
+            },
+            prevMusic() {
+                this.$emit('prev');
+            },
+            nextMusic() {
+                this.$emit('next');
             }
         },
         watch: {
