@@ -162,8 +162,6 @@ export default {
           _this.currentLyric = _this.$refs.lyrics.childNodes.length - 1;
           _this.$refs.lyrics.style.top = _this.$refs.lyricBox.clientHeight / 2 - _this.$refs.lyrics.childNodes[_this.$refs.lyrics.childNodes.length - 1].offsetTop + 'px'
       }
-
-      console.log(_this.currentLyric);
     }
   },
   watch: {
