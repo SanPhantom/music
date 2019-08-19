@@ -185,7 +185,6 @@
                     })
                     .then(res => {
                         const data = res.data;
-                        console.log(data);
                         if (data.code === 200) {
                             _this.songlist = data.playlist;
                         }
