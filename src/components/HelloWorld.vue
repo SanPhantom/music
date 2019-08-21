@@ -122,7 +122,8 @@ export default {
       this.$axios
         .get('/banner', {
           params: {
-            type: os
+            type: os,
+            withCredentials: true
           }
         })
         .then(res => {
@@ -140,7 +141,8 @@ export default {
       this.$axios
         .get('/personalized', {
           params: {
-            limit: 6
+            limit: 6,
+            withCredentials: true
           }
         })
         .then(res => {

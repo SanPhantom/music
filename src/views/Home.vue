@@ -169,6 +169,7 @@
     }
 
     .mu-tab {
+        flex: 1;
         min-width: 0;
     }
 

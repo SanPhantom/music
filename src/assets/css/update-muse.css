@@ -1,0 +1,16 @@
+.mu-input .mu-text-field-input,
+.mu-input .mu-input-action-icon {
+    color: #ffffff;
+}
+
+.mu-input .mu-input-line {
+    background-color: #ffffff;
+}
+
+.mu-input .mu-input-focus-line {
+    height: 1px;
+}
+
+.mu-appbar-title {
+    padding: 0;
+}

@@ -10,6 +10,7 @@ import axios from 'axios'
 import utils from './assets/utils'
 import musicService from './assets/music_service.js'
 import lyricService from './assets/lyric_service.js'
+import './assets/css/update-muse.css'
 
 Vue.config.productionTip = false
 
@@ -30,7 +31,6 @@ new Vue({
     store,
     render: h => h(App)
 }).$mount('#app');
-
 (function() {
     var rem = document.createElement('script')
     rem.src = './rem.js'
